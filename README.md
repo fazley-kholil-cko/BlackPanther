@@ -27,11 +27,49 @@ Request:
 ```
 
 IN Topic: ``in_api_requests``
+OUT Topic: ``out_risk``
+OUT ERROR Topic: ``out_response``
 
 ## Request Validator
 Validate incoming request from ``in_api_requests``
 
+Request:
+```
+{
+  "email": "{{Email}}",
+  "value": 700,
+  "currency": "usd",
+  "trackId": "Your tracker",  
+  "name": "John Doe",
+  "number": "4242424242424242",
+  "expiryMonth": "06",
+  "expiryYear": "2018",
+  "cvv": "100"
+}
+```
 
+Response:
+```
+{
+  "email": "{{Email}}",
+  "value": 700,
+  "currency": "usd",
+  "trackId": "Your tracker",  
+  "name": "John Doe",
+  "number": "4242424242424242",
+  "expiryMonth": "06",
+  "expiryYear": "2018",
+  "cvv": "100"
+}
+```
+
+OUT Error Response:
+
+```
+{
+	"error": "System Error"
+}
+```
 
 
 ## Viewing stream output
