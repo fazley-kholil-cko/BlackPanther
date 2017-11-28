@@ -101,7 +101,7 @@ OUT Error Response:
 
 ```
 {
-	"errorMessage": "System Error"
+	"message": "System Error"
 }
 ```
 

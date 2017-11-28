@@ -49,7 +49,7 @@ namespace Request.Validator
                     else
                     {
                         Console.WriteLine($"InValid Request Pushing to {outErrorKafkaTopic}");
-                        var error = new ErrorDto {ErrorMessage = string.Join(", ", result.ErrorMessages)};
+                        var error = new ErrorDto {Message = "Validation Error: Currency is not valid"};
                         PushResponse(outErrorKafkaTopic, Guid.NewGuid().ToString(), JsonConvert.SerializeObject(error));
                     }
 
@@ -77,11 +77,6 @@ namespace Request.Validator
         {
             var result = ValitRules<RequestDto>
                 .Create()
-                .Ensure(m => m.Value, _ => _
-                    .IsGreaterThanOrEqualTo(0))
-                .Ensure(m => m.Number, _ => _
-                    .Required()
-                    .MaxLength(19))
                 .Ensure(m => m.Currency.ToUpper(), _ => _
                     .IsEqualTo("USD"))
                 .For(model)
