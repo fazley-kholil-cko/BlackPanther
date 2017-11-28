@@ -61,11 +61,11 @@ TransactionRequest :
 ```
 
 IN Topic: ``in_api_requests``
-OUT Topic: ``out_risk``
-OUT ERROR Topic: ``out_response``
 
 ## Request Validator
 Validate incoming request from ``in_api_requests``
+OUT Topic: ``out_risk``
+OUT ERROR Topic: ``out_response``
 
 Request:
 ```
