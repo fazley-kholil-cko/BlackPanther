@@ -14,11 +14,24 @@ Method: POST
 Request:
 ```
 {
-	"cardNumber": "4242424242424242",
-	"amount": 750,
-	"currency": "usd"
+  "email": "{{Email}}",
+  "value": 700,
+  "currency": "usd",
+  "trackId": "Your tracker",  
+    "name": "{{Name}}",
+    "number": "4242424242424242",
+    "expiryMonth": "06",
+    "expiryYear": "2018",
+    "cvv": "100"
+    
+  
 }
 ```
+
+Stream: ``in_api_requests``
+
+
+
 
 ## Viewing stream output
 Build and run ``Kafka.Consumer`` to view in  ``Kafka.Consumer``
