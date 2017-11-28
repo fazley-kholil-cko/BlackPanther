@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Kafka.api.client/bin/Debug/netcoreapp2.0/Kafka.api.client.dll",
+            "program": "${workspaceFolder}/src/Kafka.api.client/bin/Debug/netcoreapp2.0/Kafka.api.client.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Kafka.api.client",
+            "cwd": "${workspaceFolder}/src/Kafka.api.client",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
