@@ -64,7 +64,7 @@ IN Topic: ``in_api_requests``
 
 ## Request Validator
 Validate incoming request from ``in_api_requests``
-OUT Topic: ``out_risk``
+OUT Topic: ``out_api_requests``
 OUT ERROR Topic: ``out_response``
 
 Request:
@@ -102,6 +102,49 @@ OUT Error Response:
 ```
 {
 	"message": "System Error"
+}
+```
+
+## Risk Processor
+Run risk checks from ``out_api_requests``
+OUT Topic: ``out_risk``
+OUT ERROR Topic: ``out_response``
+
+Request:
+```
+{
+  "email": "{{Email}}",
+  "value": 700,
+  "currency": "usd",
+  "trackId": "Your tracker",  
+  "name": "John Doe",
+  "number": "4242424242424242",
+  "expiryMonth": "06",
+  "expiryYear": "2018",
+  "cvv": "100"
+}
+```
+
+Response:
+```
+{
+  "email": "{{Email}}",
+  "value": 700,
+  "currency": "usd",
+  "trackId": "Your tracker",  
+  "name": "John Doe",
+  "number": "4242424242424242",
+  "expiryMonth": "06",
+  "expiryYear": "2018",
+  "cvv": "100"
+}
+```
+
+OUT Error Response:
+
+```
+{
+	"message": "Card blacklisted"
 }
 ```
 
