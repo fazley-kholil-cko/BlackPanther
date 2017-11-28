@@ -80,7 +80,7 @@ namespace Kafka.Risk
         {
             const string blacklistedCard = "4242424242424242";
 
-            if (request.CardNumber.Equals(blacklistedCard))
+            if (request.Number.Equals(blacklistedCard))
                 return RiskResponse.Fail("Card blacklisted");
 
             return RiskResponse.Ok();
@@ -94,6 +94,7 @@ namespace Kafka.Risk
             {
                 Console.WriteLine($"Producing response to {outputTopic}");
                 producer.ProduceAsync(outputTopic, null, serializedRequest);
+                System.Console.WriteLine($"Produced -> {serializedRequest}");
             }
         }
 

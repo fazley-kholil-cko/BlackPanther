@@ -96,7 +96,7 @@ namespace Request.Validator
             // Create the producer
             using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
             {
-                var result = producer.ProduceAsync(outStreamTopic, null, (message + UniqueId)).GetAwaiter().GetResult();
+                var result = producer.ProduceAsync(outStreamTopic, null, (message)).GetAwaiter().GetResult();
                 Console.WriteLine("Creating topic with message -> " + message);
             }
         }
