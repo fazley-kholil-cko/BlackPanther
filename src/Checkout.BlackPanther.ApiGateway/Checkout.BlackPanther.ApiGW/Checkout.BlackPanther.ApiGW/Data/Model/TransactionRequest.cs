@@ -8,8 +8,8 @@ namespace Checkout.BlackPanther.ApiGW.Data.Model
 {
     public class TransactionRequest
     {
-        [JsonProperty(PropertyName = "corellationId")]
-        public Guid CorellationId { get; set; }
+        [JsonProperty(PropertyName = "correlationId")]
+        public Guid CorrelationId { get; set; }
 
         [JsonProperty(PropertyName = "email")]
         public string Email { get; set; }

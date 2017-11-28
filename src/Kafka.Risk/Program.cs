@@ -12,7 +12,8 @@ namespace Kafka.Risk
         const string kafkaEndpoint = "127.0.0.1:9092";
         const string consumerGroupId = "checkout.risk";
         const string inputTopic = "out_api_requests";
-        const string outputTopic = "out_risk";
+        // const string outputTopic = "out_risk";
+        const string outputTopic = "out_response";
         const string finalTopic = "out_response";
 
 
@@ -58,7 +59,7 @@ namespace Kafka.Risk
                 // Poll for messages
                 while (!cancelled)
                 {
-                    consumer.Poll(10000);
+                    consumer.Poll(100);
                 }
             }
         }
@@ -93,7 +94,7 @@ namespace Kafka.Risk
             using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
             {
                 Console.WriteLine($"Producing response to {outputTopic}");
-                producer.ProduceAsync(outputTopic, null, serializedRequest);
+                var result = producer.ProduceAsync(outputTopic, null, (serializedRequest)).GetAwaiter().GetResult();
                 System.Console.WriteLine($"Produced -> {serializedRequest}");
             }
         }

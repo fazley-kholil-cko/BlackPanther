@@ -11,6 +11,7 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace Checkout.BlackPanther.ApiGW.Controllers
 {
@@ -39,9 +40,9 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] TransactionRequest request)
+        public async Task<object> Create([FromBody] TransactionRequest request)
         {
-            request.CorellationId = Guid.NewGuid();
+            request.CorrelationId = Guid.NewGuid();
 
             if (request == null)
             {
@@ -59,13 +60,20 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
             //push to kafka
             PushRequestAsync(request);
 
-            return await Task.Run(() =>
-           {
-               WaitForResponseAsync(request);
+        //     return await Task.Run(() =>
+        //    {
+        //        WaitForResponseAsync(request);
 
-           }).ContinueWith((r) => Ok(r));
+        //    }).ContinueWith((r) => Ok(r));
 
+            var cache = RedisConnectorHelper.Connection.GetDatabase(); 
 
+            RedisValue value = RedisValue.Null;
+
+            while (value == RedisValue.Null)
+                value = cache.StringGet(request.CorrelationId.ToString());
+
+            return JsonConvert.DeserializeObject<TransactionRequest>(value.ToString());
         }
 
 

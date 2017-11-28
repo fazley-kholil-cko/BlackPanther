@@ -67,7 +67,7 @@ namespace Request.Validator
                 // Poll for messages
                 while (!cancelled)
                 {
-                    consumer.Poll(10000);
+                    consumer.Poll(100);
                 }
             }
 

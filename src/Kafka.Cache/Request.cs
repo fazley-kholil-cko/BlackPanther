@@ -1,6 +1,6 @@
 using System;
 
-namespace Kafka.Risk
+namespace Kafka.Cache
 {
     public class Request
     {

@@ -1,9 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace Request.Validator.Dtos
 {
     public class RequestDto
     {
+        public Guid CorrelationId { get; set; }
+
         [JsonProperty(PropertyName = "email")]
         public string Email { get; set; }
 
