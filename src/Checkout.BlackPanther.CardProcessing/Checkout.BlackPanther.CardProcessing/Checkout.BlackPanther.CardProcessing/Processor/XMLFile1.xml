@@ -1,0 +1,141 @@
+﻿<processTransactionDs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SubEntityID xsi:nil="true" />
+  <EntityID xsi:nil="true" />
+  <ProcessID>8000001</ProcessID>
+  <ProcessPassword>Password1!</ProcessPassword>
+  <serviceURL>http://localhost/WebService.ebs/service.asmx</serviceURL>
+  <trackID>100055</trackID>
+  <OriginalTransactionID xsi:nil="true" />
+  <OriginalMaskedTransactionID xsi:nil="true" />
+  <Amount>100.00</Amount>
+  <CardNumber>345678901234564</CardNumber>
+  <Cvv2>1051</Cvv2>
+  <ExpDay xsi:nil="true" />
+  <ExpMonth>06</ExpMonth>
+  <ExpYear>2017</ExpYear>
+  <member>Mozell</member>
+  <address xsi:nil="true" />
+  <bill_address2 xsi:nil="true" />
+  <bill_city xsi:nil="true" />
+  <bill_state xsi:nil="true" />
+  <bill_country xsi:nil="true" />
+  <bill_countryISO3code xsi:nil="true" />
+  <bill_email xsi:nil="true" />
+  <zip xsi:nil="true" />
+  <actionCode>4</actionCode>
+  <TransactionID>100055</TransactionID>
+  <ProcessResponseCode xsi:nil="true" />
+  <ProcessErrorCode xsi:nil="true" />
+  <currencyCode>840</currencyCode>
+  <currencyExponent>2</currencyExponent>
+  <referenceId xsi:nil="true" />
+  <AuthCode xsi:nil="true" />
+  <countrycode xsi:nil="true" />
+  <subEntityUser xsi:nil="true" />
+  <subEntityPassword xsi:nil="true" />
+  <subEntityAction>4</subEntityAction>
+  <customerIp xsi:nil="true" />
+  <merchantIp xsi:nil="true" />
+  <udf1 xsi:nil="true" />
+  <udf2 xsi:nil="true" />
+  <udf3 xsi:nil="true" />
+  <udf4 xsi:nil="true" />
+  <udf5 xsi:nil="true" />
+  <currency>USD</currency>
+  <ResponseCodeID xsi:nil="true" />
+  <ErrorCodeID xsi:nil="true" />
+  <TransactionDate xsi:nil="true" />
+  <result xsi:nil="true" />
+  <paymentID xsi:nil="true" />
+  <SubEntityOriginalTransactionID xsi:nil="true" />
+  <subEntityCode xsi:nil="true" />
+  <Token xsi:nil="true" />
+  <Sender xsi:nil="true" />
+  <Channel>1</Channel>
+  <Error xsi:nil="true" />
+  <subEntityResponse xsi:nil="true" />
+  <Pareq xsi:nil="true" />
+  <TermUrl xsi:nil="true" />
+  <Md xsi:nil="true" />
+  <acsURL xsi:nil="true" />
+  <_3D xsi:nil="true" />
+  <advanceduser xsi:nil="true" />
+  <advancedpassword xsi:nil="true" />
+  <avs_check xsi:nil="true" />
+  <SubEntityProcessCode xsi:nil="true" />
+  <SubEntityPosInfo xsi:nil="true" />
+  <SubEntityCvv2_check xsi:nil="true" />
+  <POSCountryCode>GB</POSCountryCode>
+  <MCC>6559</MCC>
+  <EntityCountryCode xsi:nil="true" />
+  <MerchantID>1</MerchantID>
+  <CardType>Visa</CardType>
+  <RecurringStartDate xsi:nil="true" />
+  <RecurringInterval xsi:nil="true" />
+  <RecurringIntervalType xsi:nil="true" />
+  <TransactionSource xsi:nil="true" />
+  <ServiceType xsi:nil="true" />
+  <CustomerToken xsi:nil="true" />
+  <eci xsi:nil="true" />
+  <xid xsi:nil="true" />
+  <cavv xsi:nil="true" />
+  <ParesStatus xsi:nil="true" />
+  <merchantcustomerid xsi:nil="true" />
+  <parenttransactionid xsi:nil="true" />
+  <acceptorname>test account for EBS</acceptorname>
+  <acceptorcity>London</acceptorcity>
+  <acceptorcountry>GB</acceptorcountry>
+  <billingdescriptor>null</billingdescriptor>
+</processTransactionDs>
+
+
+<processTransactionDs>
+  <SubEntityID></SubEntityID>
+  <EntityID></EntityID>
+  <ProcessID>8000001</ProcessID>
+  <ProcessPassword>Password1!</ProcessPassword>
+  <serviceURL>http://localhost/WebService.ebs/service.asmx</serviceURL>
+  <trackID>100055</trackID>
+  <OriginalTransactionID></OriginalTransactionID>
+  <Amount>100.00</Amount>
+  <CardNumber>345678901234564</CardNumber>
+  <Cvv2>Y</Cvv2>
+  <ExpYear>2017</ExpYear>
+  <ExpMonth>06</ExpMonth>
+  <member>Mozell</member>
+  <address></address>
+  <zip></zip>
+  <actionCode>4</actionCode>
+  <TransactionID>8123654131</TransactionID>
+  <ProcessResponseCode>00</ProcessResponseCode>
+  <ProcessErrorCode></ProcessErrorCode>
+  <ExpDay></ExpDay>
+  <currencyCode>840</currencyCode>
+  <referenceId>000800811609</referenceId>
+  <AuthCode>800811</AuthCode>
+  <countrycode></countrycode>
+  <subEntityUser></subEntityUser>
+  <subEntityPassword></subEntityPassword>
+  <subEntityAction>4</subEntityAction>
+  <customerIp></customerIp>
+  <merchantIp></merchantIp>
+  <udf1></udf1>
+  <udf2></udf2>
+  <udf3></udf3>
+  <udf4></udf4>
+  <udf5></udf5>
+  <currency>USD</currency>
+  <ResponseCodeID></ResponseCodeID>
+  <ErrorCodeID></ErrorCodeID>
+  <TransactionDate></TransactionDate>
+  <result></result>
+  <paymentID></paymentID>
+  <SubEntityOriginalTransactionID></SubEntityOriginalTransactionID>
+  <subEntityCode></subEntityCode>
+  <Token></Token>
+  <Sender></Sender>
+  <Channel>1</Channel>
+  <Error></Error>
+  <subEntityResponse>APPROVED</subEntityResponse>
+  <avs_check>S</avs_check>
+</processTransactionDs>
