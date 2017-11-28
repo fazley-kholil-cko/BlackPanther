@@ -12,7 +12,7 @@ Method: POST
 
 
 Request:
-```
+```json
 {
   "email": "{{Email}}",
   "value": 700,
