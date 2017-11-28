@@ -18,13 +18,11 @@ Request:
   "value": 700,
   "currency": "usd",
   "trackId": "Your tracker",  
-    "name": "{{Name}}",
-    "number": "4242424242424242",
-    "expiryMonth": "06",
-    "expiryYear": "2018",
-    "cvv": "100"
-    
-  
+  "name": "John Doe",
+  "number": "4242424242424242",
+  "expiryMonth": "06",
+  "expiryYear": "2018",
+  "cvv": "100"
 }
 ```
 
