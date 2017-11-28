@@ -29,7 +29,7 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
         {
             _kafkaEndpoint = "127.0.0.1:9092";
             _inTopic = "in_api_requests";
-            _outTopic = "ckotopic";
+            _outTopic = "fakeredis";
             _producerConfig = new Dictionary<string, object> { { "bootstrap.servers", _kafkaEndpoint } };
             _consumerConfig = new Dictionary<string, object>
             {
