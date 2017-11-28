@@ -19,3 +19,6 @@ Request:
 	"currency": "usd"
 }
 ```
+
+## Viewing stream output
+Build and run ``Kafka.Consumer`` to view in  ``Kafka.Consumer``
