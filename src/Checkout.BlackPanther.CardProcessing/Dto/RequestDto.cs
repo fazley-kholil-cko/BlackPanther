@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Checkout.BlackPanther.CardProcessing.Dto
 {
-    class RequestDto
+    public class RequestDto
     {
     }
 }
