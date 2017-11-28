@@ -32,4 +32,4 @@ Stream: ``in_api_requests``
 
 
 ## Viewing stream output
-Build and run ``Kafka.Consumer`` to view in  ``Kafka.Consumer``
+Build and run ``Kafka.Consumer`` to view in console.
