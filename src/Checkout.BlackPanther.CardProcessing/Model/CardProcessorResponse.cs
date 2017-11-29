@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Checkout.BlackPanther.CardProcessing.Processor
+namespace Checkout.BlackPanther.CardProcessing.Processors
 {
     public class CardProcessorResponse
     {

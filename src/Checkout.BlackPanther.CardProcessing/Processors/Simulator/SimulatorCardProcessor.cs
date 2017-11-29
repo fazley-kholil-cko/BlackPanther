@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 
-namespace Checkout.BlackPanther.CardProcessing.Processor.Simulator
+namespace Checkout.BlackPanther.CardProcessing.Processors.Simulator
 {
     public class SimulatorCardProcessor
     {

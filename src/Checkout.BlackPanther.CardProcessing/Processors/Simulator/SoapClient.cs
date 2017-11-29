@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace Checkout.BlackPanther.CardProcessing.Processor.Simulator
+namespace Checkout.BlackPanther.CardProcessing.Processors.Simulator
 {
     /// <summary>
     /// A Soap Client used for legacy processors such as the Simulator and Mashreq (WCF service)

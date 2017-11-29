@@ -57,6 +57,7 @@ namespace Kafka.Cache
             var cache = RedisConnectorHelper.Connection.GetDatabase();
             var request = JsonConvert.DeserializeObject<Request>(msg.Value);
             cache.StringSet(request.CorrelationId.ToString(), msg.Value);
+            Console.WriteLine(msg.Value);
             Console.WriteLine($"Wrote into cache - {request.CorrelationId}");
         }
     }

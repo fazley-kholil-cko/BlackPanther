@@ -13,7 +13,7 @@ namespace Kafka.Risk
         const string consumerGroupId = "checkout.risk";
         const string inputTopic = "out_api_requests";
         // const string outputTopic = "out_risk";
-        const string outputTopic = "out_response";
+        const string outputTopic = "out_risk";
         const string finalTopic = "out_response";
         private static Producer<Null, string> _producer;
 

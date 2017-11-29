@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace Checkout.BlackPanther.CardProcessing.Processor.Simulator
+namespace Checkout.BlackPanther.CardProcessing.Processors.Simulator
 {
     [XmlRoot("processTransactionDs", Namespace = "")]
     public class SimulatorRequest

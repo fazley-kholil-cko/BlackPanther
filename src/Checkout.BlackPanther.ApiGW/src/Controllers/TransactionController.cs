@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using Checkout.BlackPanther.ApiGW.Dtos;
 
 namespace Checkout.BlackPanther.ApiGW.Controllers
 {
@@ -46,6 +47,7 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
         {
             request.CorrelationId = Guid.NewGuid();
 
+
             if (request == null)
             {
                 return BadRequest();
@@ -67,7 +69,7 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
             while (value == RedisValue.Null)
                 value = cache.StringGet(request.CorrelationId.ToString());
 
-            return JsonConvert.DeserializeObject<TransactionRequest>(value.ToString());
+            return JsonConvert.DeserializeObject<ResponseDto>(value.ToString());
         }
         
         private void WaitForResponseAsync(TransactionRequest request)

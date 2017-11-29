@@ -6,8 +6,9 @@ namespace Checkout.BlackPanther.CardProcessing
 {
     public class RequestDto
     {
+        public Guid correlationId { get; set; }
         public string email { get; set; }
-        public decimal value { get; set; }
+        public int value { get; set; }
         public string currency { get; set; }
         public string trackId { get; set; }
         public string name { get; set; }

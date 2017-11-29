@@ -1,5 +1,5 @@
 ﻿using Checkout.BlackPanther.CardProcessing.Model;
-using Checkout.BlackPanther.CardProcessing.Processor.Simulator;
+using Checkout.BlackPanther.CardProcessing.Processors.Simulator;
 using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using Newtonsoft.Json;
@@ -19,6 +19,8 @@ namespace Checkout.BlackPanther.CardProcessing
         const string INPUT_TOPIC = "out_risk";
 
         const string OUTPUT_TOPIC = "out_response";
+
+        private static Producer<Null, string> _producer;
 
         static void Main(string[] args)
         {
@@ -42,12 +44,14 @@ namespace Checkout.BlackPanther.CardProcessing
                 {
                     e.Cancel = true;
                     cancelled = true;
+
+                    _producer.Dispose();
                 };
                 Console.WriteLine("Ctrl-C to exit.");
                 // Poll for messages
                 while (!cancelled)
                 {
-                    consumer.Poll(100);
+                    consumer.Poll(10);
                 }
 
             }
@@ -96,6 +100,7 @@ namespace Checkout.BlackPanther.CardProcessing
         {
             try
             {
+                long lBegin = Environment.TickCount;
                 //Acquirer configuration details should be sent in request
                 AcquirerConfiguration acqConfig = new AcquirerConfiguration(
                     1, //Acquirer ID  
@@ -110,7 +115,7 @@ namespace Checkout.BlackPanther.CardProcessing
 
                 Currency cur = new Currency(
                     "USD", // Currency symbol + currency exponent shold be sent down in request 
-                    req.currency,
+                    "840",
                     2);
 
                 Merchant merchant = new Merchant(1, 1000001, "6559", "London", "LDN", "GB", "GBR", "826", ""); // Merchant details should be sent down in request
@@ -137,7 +142,7 @@ namespace Checkout.BlackPanther.CardProcessing
                 ChargeRequest charge = ChargeRequest.
                     CreateAuthoriseRequest(
                         cur,
-                        req.value, // Amount
+                        ConvertFromMinorValue(req.value, 2), // Amount
                         merchant, // Merchant details
                         false, // Is dynamic descriptor 
                         "test account for EBS", "London",  // billing descriptor
@@ -149,7 +154,9 @@ namespace Checkout.BlackPanther.CardProcessing
                 CardProcessorRequest request = new CardProcessorRequest(long.Parse(req.trackId), acqConfig, charge);
                 SimulatorCardProcessor simulatorCardProcessor = new SimulatorCardProcessor(new HttpClient());
 
+                long lBeginSimulator = Environment.TickCount;
                 var processorResponse = await simulatorCardProcessor.ProcessAsync(request);
+                long lsimulatorTimetaken = Environment.TickCount - lBeginSimulator;
                 //                public string AuthCode { get; set; } "923259"
                 //public string AcquirerTransactionId { get; set; } "8123654135"
                 //public string AcquirerReferenceNumber { get; set; } 000923259668
@@ -159,14 +166,15 @@ namespace Checkout.BlackPanther.CardProcessing
                 //public string CvvCheckResult { get; set; } Y
                 //public Dictionary<string, string> AcquirerMetadata { get; set; }
 
-                Dto.ResponseDto response = new Dto.ResponseDto();
+                Dtos.ResponseDto response = new Dtos.ResponseDto();
+                response.CorrelationId = req.correlationId;
                 response.Id = req.trackId; //Should be the charge Id
                 response.Created = request.ChargeRequest.RequestedOn;
                 response.Amount = ConvertToMinorValue(request.ChargeRequest.Amount, request.ChargeRequest.Currency.Exponent);
                 //response.ResponseCode = processorResponse.AcquirerResponseCode; // Nornally Acquirer response code mapping is done here
                 //response.ResponseMessage = ""; // On AcquirerResponseCode we retrieve the response description
                 //response.ResponseAdvancedInfo = ""; // On AcquirerResponseCode we retrieve the response long description
-                if(processorResponse.AcquirerResponse == "APPROVED")
+                if (processorResponse.AcquirerResponse == "APPROVED")
                 {
                     response.ResponseCode = "10000";
                     response.ResponseMessage = "Approved";
@@ -175,7 +183,7 @@ namespace Checkout.BlackPanther.CardProcessing
                     response.AuthCode = processorResponse.AuthCode;
                 }
 
-                response.Card = new Dto.ResponseDto.CardDetails();
+                response.Card = new Dtos.ResponseDto.CardDetails();
                 response.Card.ExpiryMonth = request.ChargeRequest.Card.ExpiryMonth.ToString().PadLeft(2, '0');
                 response.Card.ExpiryYear = request.ChargeRequest.Card.ExpiryYear.ToString().PadLeft(2, '0');
                 response.Card.Last4 = request.ChargeRequest.Card.Number.Substring(request.ChargeRequest.Card.Number.Length - 4, 4);
@@ -183,12 +191,14 @@ namespace Checkout.BlackPanther.CardProcessing
                 response.Card.Bin = request.ChargeRequest.Card.Number.Substring(0, 8);
                 response.Card.CvvCheck = processorResponse.CvvCheckResult;
                 response.Card.AvsCheck = processorResponse.AvsCheckResult;
+                response.CardProcessingProcessAsync = Environment.TickCount - lBegin;
+                response.SimulatorProcessingTime = lsimulatorTimetaken;
 
                 // Send response to the out_response topic
-
+                SendToOutTopic(response);
                 // Send to update transaction topic or is the insert/update of the transaction table to be done here?
 
-
+                
             }
             catch (Exception e)
             {
@@ -205,19 +215,28 @@ namespace Checkout.BlackPanther.CardProcessing
             return Convert.ToInt32(majorValue * (decimal)Math.Pow(10.0, currencyExponent));
         }
 
+        public static decimal ConvertFromMinorValue(int minorValue, int currencyExponent)
+        {
+            return Convert.ToDecimal(minorValue / (decimal)Math.Pow(10.0, currencyExponent));
+        }
+
         private static void PushRequest(string serializedRequest, string outputTopic)
         {
             var producerConfig = new Dictionary<string, object> { { "bootstrap.servers", KAFKA_ENDPOINT } };
 
-            using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
-            {
-                Console.WriteLine($"Producing response to {outputTopic}");
-                var result = producer.ProduceAsync(outputTopic, null, (serializedRequest)).GetAwaiter().GetResult();
-                System.Console.WriteLine($"Produced -> {serializedRequest}");
-            }
+            if (_producer == null)
+                _producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8));
+
+            Console.WriteLine($"Producing response to {outputTopic}");
+            long lDebut = Environment.TickCount;
+            var result = _producer.ProduceAsync(outputTopic, null, (serializedRequest)).GetAwaiter().GetResult();
+            System.Console.WriteLine($"took {Environment.TickCount - lDebut} ms to produce output");
+            System.Console.WriteLine($"Produced -> {serializedRequest}");
+
+
         }
 
-        private static void SendToOutTopic(Dto.ResponseDto response)
+        private static void SendToOutTopic(Dtos.ResponseDto response)
         {
             string serializedRequest = JsonConvert.SerializeObject(response);
             PushRequest(serializedRequest, OUTPUT_TOPIC);

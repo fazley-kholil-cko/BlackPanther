@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Checkout.BlackPanther.CardProcessing.Dto
+namespace Checkout.BlackPanther.CardProcessing.Dtos
 {
     public class RequestDto
     {

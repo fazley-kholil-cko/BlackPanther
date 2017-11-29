@@ -5,6 +5,7 @@ namespace Request.Validator.Dtos
 {
     public class RequestDto
     {
+        [JsonProperty(PropertyName = "correlationId")]
         public Guid CorrelationId { get; set; }
 
         [JsonProperty(PropertyName = "email")]

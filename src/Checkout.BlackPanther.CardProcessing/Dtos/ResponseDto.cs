@@ -1,10 +1,12 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Kafka.Cache
+namespace Checkout.BlackPanther.CardProcessing.Dtos
 {
-    public class Request
+    public class ResponseDto
     {
-       public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
         public string Id { get; set; }
         public DateTime Created { get; set; }
         public int Amount { get; set; }
@@ -14,10 +16,10 @@ namespace Kafka.Cache
         public string ResponseAdvancedInfo { get; set; }
         public string Status { get; set; }
         public string AuthCode { get; set; }
-        public long CardProcessingProcessAsync { get; set; }
-        public long SimulatorProcessingTime { get; set; }
 
         public CardDetails Card { get; set; }
+        public long CardProcessingProcessAsync { get; set; }
+        public long SimulatorProcessingTime { get; set; }
 
         public class CardDetails
         {

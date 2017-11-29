@@ -46,13 +46,17 @@ namespace Request.Validator
                     if (result.Succeeded)
                     {
                         Console.WriteLine($"Valid Request Pushing to {outKafkaTopic}");
-                        PushResponse(outKafkaTopic, Guid.NewGuid().ToString(), JsonConvert.SerializeObject(request));
+                        PushResponse(outKafkaTopic, 
+                        //Guid.NewGuid().ToString(), 
+                        JsonConvert.SerializeObject(request));
                     }
                     else
                     {
                         Console.WriteLine($"InValid Request Pushing to {outErrorKafkaTopic}");
                         var error = new ErrorDto {Message = "Validation Error: Currency is not valid"};
-                        PushResponse(outErrorKafkaTopic, Guid.NewGuid().ToString(), JsonConvert.SerializeObject(error));
+                        PushResponse(outErrorKafkaTopic, 
+                        //Guid.NewGuid().ToString(), 
+                        JsonConvert.SerializeObject(error));
                     }
 
                 };
@@ -87,14 +91,16 @@ namespace Request.Validator
             return result;
         }
 
-        public static void PushResponse(string outStreamTopic, string outStreamId, string message)
+        public static void PushResponse(string outStreamTopic, 
+        //string outStreamId, 
+        string message)
         {
             // The Kafka endpoint address
             string kafkaEndpoint = "127.0.0.1:9092";
             //The stream which should be read by redis
             // Create the producer configuration
             var producerConfig = new Dictionary<string, object> { { "bootstrap.servers", kafkaEndpoint } };
-            var UniqueId = Guid.NewGuid().ToString();
+            //var UniqueId = Guid.NewGuid().ToString();
             if (_producer == null)
                 _producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8));
             // Create the producer

@@ -19,7 +19,7 @@ namespace Checkout.BlackPanther.ApiGW.Data
             RuleFor(t => t.Number).NotEmpty().MaximumLength(19);
             RuleFor(t => t.ExpiryMonth).NotEmpty().Length(2);
             RuleFor(t => t.ExpiryYear).NotEmpty().Length(4);
-            RuleFor(t => t.Cvv).NotEmpty().Length(3);
+            RuleFor(t => t.Cvv).NotEmpty().Length(4);
         }
     }
 }
