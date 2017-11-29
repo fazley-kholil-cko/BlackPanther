@@ -15,7 +15,7 @@ namespace Kafka.Risk
         // const string outputTopic = "out_risk";
         const string outputTopic = "out_response";
         const string finalTopic = "out_response";
-
+        private static Producer<Null, string> _producer;
 
         static void Main(string[] args)
         {
@@ -90,11 +90,12 @@ namespace Kafka.Risk
         private static void PushRequest(string serializedRequest, string outputTopic)
         {         
             var producerConfig = new Dictionary<string, object> { { "bootstrap.servers", kafkaEndpoint } };
-
-            using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
+            if (_producer == null)
+                _producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8));
+            //using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
             {
                 Console.WriteLine($"Producing response to {outputTopic}");
-                var result = producer.ProduceAsync(outputTopic, null, (serializedRequest)).GetAwaiter().GetResult();
+                var result = _producer.ProduceAsync(outputTopic, null, (serializedRequest)).GetAwaiter().GetResult();
                 System.Console.WriteLine($"Produced -> {serializedRequest}");
             }
         }

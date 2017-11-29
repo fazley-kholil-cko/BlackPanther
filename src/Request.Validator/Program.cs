@@ -11,6 +11,8 @@ namespace Request.Validator
 {
     class Program
     {
+         private static Producer<Null, string> _producer;
+
         static void Main(string[] args)
         {
             ValidateRequestFromKafka();
@@ -93,10 +95,12 @@ namespace Request.Validator
             // Create the producer configuration
             var producerConfig = new Dictionary<string, object> { { "bootstrap.servers", kafkaEndpoint } };
             var UniqueId = Guid.NewGuid().ToString();
+            if (_producer == null)
+                _producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8));
             // Create the producer
-            using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
+            //using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
             {
-                var result = producer.ProduceAsync(outStreamTopic, null, (message)).GetAwaiter().GetResult();
+                var result = _producer.ProduceAsync(outStreamTopic, null, (message)).GetAwaiter().GetResult();
                 Console.WriteLine("Creating topic with message -> " + message);
             }
         }

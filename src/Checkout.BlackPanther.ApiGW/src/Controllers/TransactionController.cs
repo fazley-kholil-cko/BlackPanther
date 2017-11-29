@@ -24,7 +24,7 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
         private readonly string _kafkaEndpoint;
         private readonly string _inTopic;
         private readonly string _outTopic;
-
+        private static Producer<Null, string> _producer;
 
         public TransactionController()
         {
@@ -37,6 +37,8 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
                 { "group.id", "myconsumer" },
                 { "bootstrap.servers", _kafkaEndpoint },
             };
+            if (_producer == null)
+                _producer = new Producer<Null, string>(_producerConfig, null, new StringSerializer(Encoding.UTF8));
         }
 
         [HttpPost]
@@ -60,24 +62,14 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
             //push to kafka
             PushRequestAsync(request);
 
-        //     return await Task.Run(() =>
-        //    {
-        //        WaitForResponseAsync(request);
-
-        //    }).ContinueWith((r) => Ok(r));
-
-            var cache = RedisConnectorHelper.Connection.GetDatabase(); 
-
+            var cache = RedisConnectorHelper.Connection.GetDatabase();
             RedisValue value = RedisValue.Null;
-
             while (value == RedisValue.Null)
                 value = cache.StringGet(request.CorrelationId.ToString());
 
             return JsonConvert.DeserializeObject<TransactionRequest>(value.ToString());
         }
-
-
-
+        
         private void WaitForResponseAsync(TransactionRequest request)
         {
             try
@@ -114,15 +106,10 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
 
         private async Task PushRequestAsync(TransactionRequest request)
         {
-
             string jsonRequest = JsonConvert.SerializeObject(request);
-
-            using (var producer = new Producer<Null, string>(_producerConfig, null, new StringSerializer(Encoding.UTF8)))
-            {
-                Console.WriteLine("sending kafka request");
-                var result = producer.ProduceAsync(_inTopic, null, jsonRequest).GetAwaiter().GetResult();
-                Console.WriteLine("kafka request send");
-            }
+            Console.WriteLine("sending kafka request");
+            var result = _producer.ProduceAsync(_inTopic, null, jsonRequest).GetAwaiter().GetResult();
+            Console.WriteLine("kafka request send");
         }
 
         private List<CustomError> DisplayErrors(IList<ValidationFailure> errors)
