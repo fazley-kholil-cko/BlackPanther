@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  checkout.blackpanther.apigw:
-    image: checkout.blackpanther.apigw
-    build:
-      context: ./Checkout.BlackPanther.ApiGW
-      dockerfile: Dockerfile
