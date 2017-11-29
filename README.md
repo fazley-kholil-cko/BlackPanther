@@ -5,7 +5,7 @@
 
 ## Running the App
 Build and run API client using the following:
-URL: ``http://localhost:5000/api/charge``
+URL: ``http://localhost:5000/api/transaction``
 
 
 Method: POST
