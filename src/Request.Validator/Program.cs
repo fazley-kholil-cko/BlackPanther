@@ -11,7 +11,7 @@ namespace Request.Validator
 {
     class Program
     {
-         private static Producer<Null, string> _producer;
+        private static Producer<Null, string> _producer;
 
         static void Main(string[] args)
         {
@@ -22,16 +22,16 @@ namespace Request.Validator
         {
 
             // The Kafka endpoint address
-            var kafkaEndpoint = "127.0.0.1:9092";
-
+            var kafkaEndpoint = AppSettings.KafkaConnection;//"127.0.0.1:9092";
+            Console.WriteLine($"Kafka endpoint {kafkaEndpoint}");
             //Validator topic
-            var inKafkaTopic = "in_api_requests";
-            var outKafkaTopic = "out_api_requests";
-            var outErrorKafkaTopic = "out_response";
-            
+            var inKafkaTopic = AppSettings.KafkaInTopicName;//"in_api_requests";
+            var outKafkaTopic = AppSettings.KafkaOutTopicName;//"out_api_requests";
+            var outErrorKafkaTopic = AppSettings.kafkaOutErrorTopicName;//"out_response";
+
             var consumerConfig = new Dictionary<string, object>
             {
-                { "group.id", "valdator.consumer" },
+                { "group.id", AppSettings.KafkaGroupName },
                 { "bootstrap.servers", kafkaEndpoint },
             };
 
@@ -46,15 +46,15 @@ namespace Request.Validator
                     if (result.Succeeded)
                     {
                         Console.WriteLine($"Valid Request Pushing to {outKafkaTopic}");
-                        PushResponse(outKafkaTopic, 
+                        PushResponse(outKafkaTopic,
                         //Guid.NewGuid().ToString(), 
                         JsonConvert.SerializeObject(request));
                     }
                     else
                     {
                         Console.WriteLine($"InValid Request Pushing to {outErrorKafkaTopic}");
-                        var error = new ErrorDto {Message = "Validation Error: Currency is not valid"};
-                        PushResponse(outErrorKafkaTopic, 
+                        var error = new ErrorDto { Message = "Validation Error: Currency is not valid" };
+                        PushResponse(outErrorKafkaTopic,
                         //Guid.NewGuid().ToString(), 
                         JsonConvert.SerializeObject(error));
                     }
@@ -91,7 +91,7 @@ namespace Request.Validator
             return result;
         }
 
-        public static void PushResponse(string outStreamTopic, 
+        public static void PushResponse(string outStreamTopic,
         //string outStreamId, 
         string message)
         {
