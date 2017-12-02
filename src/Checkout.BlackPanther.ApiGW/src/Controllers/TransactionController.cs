@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using Checkout.BlackPanther.ApiGW.Dtos;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Checkout.BlackPanther.ApiGW.Controllers
 {
@@ -21,23 +23,19 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
     public class TransactionController : Controller
     {
         private readonly Dictionary<string, object> _producerConfig;
-        private readonly Dictionary<string, object> _consumerConfig;
         private readonly string _kafkaEndpoint;
         private readonly string _inTopic;
-        private readonly string _outTopic;
         private static Producer<Null, string> _producer;
+        private readonly AppSettings _appSettings;
+        readonly ILogger<TransactionController> _logger;
 
-        public TransactionController()
+        public TransactionController(IOptions<AppSettings> appSettings, ILogger<TransactionController> logger)
         {
-            _kafkaEndpoint = "127.0.0.1:9092";
-            _inTopic = "in_api_requests";
-            _outTopic = "fakeredis";
-            _producerConfig = new Dictionary<string, object> { { "bootstrap.servers", _kafkaEndpoint } };
-            _consumerConfig = new Dictionary<string, object>
-            {
-                { "group.id", "myconsumer" },
-                { "bootstrap.servers", _kafkaEndpoint },
-            };
+            _appSettings = appSettings.Value;
+            _logger = logger;
+            _kafkaEndpoint =_appSettings.KafkaConnection;
+            _inTopic = _appSettings.KafkaTopicName;
+            _producerConfig = new Dictionary<string, object> { { "bootstrap.servers", _kafkaEndpoint } };  
             if (_producer == null)
                 _producer = new Producer<Null, string>(_producerConfig, null, new StringSerializer(Encoding.UTF8));
         }
@@ -45,8 +43,8 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
         [HttpPost]
         public async Task<object> Create([FromBody] TransactionRequest request)
         {
+            _logger.LogInformation("Post message received.");
             request.CorrelationId = Guid.NewGuid();
-
 
             if (request == null)
             {
@@ -71,47 +69,16 @@ namespace Checkout.BlackPanther.ApiGW.Controllers
 
             return JsonConvert.DeserializeObject<ResponseDto>(value.ToString());
         }
-        
-        private void WaitForResponseAsync(TransactionRequest request)
-        {
-            try
-            {
-
-                object response = null;
-
-                using (var consumer = new Consumer<Null, string>(_consumerConfig, null, new StringDeserializer(Encoding.UTF8)))
-                {
-                    // Subscribe to the OnMessage event
-                    consumer.OnMessage += (obj, msg) =>
-                    {
-                        Console.WriteLine($"Received: {msg.Value}");
-                        response = JsonConvert.DeserializeObject<TransactionRequest>(msg.Value);
-                    };
-                    consumer.Subscribe(new List<string>() { _outTopic });
-                    var cancelled = false;
-
-                    // Poll for messages
-                    while (!cancelled)
-                    {
-                        consumer.Poll(10000);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
-
-        }
 
         private async Task PushRequestAsync(TransactionRequest request)
         {
+            Console.WriteLine("App setting:" + _appSettings.KafkaConnection);
             string jsonRequest = JsonConvert.SerializeObject(request);
-            Console.WriteLine("sending kafka request");
-            var result = _producer.ProduceAsync(_inTopic, null, jsonRequest).GetAwaiter().GetResult();
-            Console.WriteLine("kafka request send");
+            //Console.WriteLine("sending kafka request");
+            long tickStart = Environment.TickCount;
+            var result = _producer.ProduceAsync(_inTopic, null, jsonRequest).GetAwaiter().GetResult();            
+            _logger.LogInformation($"API Gateway took {Environment.TickCount - tickStart} ms to produce to topic {_inTopic}");
+            //Console.WriteLine("kafka request send");
         }
 
         private List<CustomError> DisplayErrors(IList<ValidationFailure> errors)
