@@ -1,20 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Serilog;
 using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using Newtonsoft.Json;
 using Request.Validator.Dtos;
 using Valit;
+using StructureMap;
 
 namespace Request.Validator
 {
     class Program
     {
         private static Producer<Null, string> _producer;
+        private static IContainer _smContainer;
+        private static ILogger _logger;
+        public static IContainer SmContainer
+        {
+            get
+            {
+                if (_smContainer == null)
+                {
+                    _smContainer = new Container(config =>
+                    {
+                        config.AddRegistry<LoggingRegistry>();
+                    });
+                }
+                _smContainer.AssertConfigurationIsValid();
+                return _smContainer;
+            }
+        }
 
+
+        private static void ResolveDependencies()
+        {
+            _logger = SmContainer.GetInstance<ILogger>();            
+
+        }
         static void Main(string[] args)
         {
+            ResolveDependencies();
             ValidateRequestFromKafka();
         }
 
@@ -103,12 +129,10 @@ namespace Request.Validator
             //var UniqueId = Guid.NewGuid().ToString();
             if (_producer == null)
                 _producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8));
-            // Create the producer
-            //using (var producer = new Producer<Null, string>(producerConfig, null, new StringSerializer(Encoding.UTF8)))
-            {
-                var result = _producer.ProduceAsync(outStreamTopic, null, (message)).GetAwaiter().GetResult();
-                Console.WriteLine("Creating topic with message -> " + message);
-            }
+            long tickStart = Environment.TickCount;
+            var result = _producer.ProduceAsync(outStreamTopic, null, (message)).GetAwaiter().GetResult();
+
+            _logger.Information($"Request Validator took {Environment.TickCount - tickStart} ms to produce to topic {outStreamTopic}");
         }
 
     }
