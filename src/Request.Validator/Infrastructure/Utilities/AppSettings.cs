@@ -26,8 +26,8 @@ namespace Request.Validator
 
         public static string KafkaOutTopicName => Configuration["appSettings:KafkaOutTopicName"];
 
-        public static string kafkaOutErrorTopicName => Configuration["connectionStrings:kafkaOutErrorTopicName"];
+        public static string kafkaOutErrorTopicName => Configuration["appSettings:kafkaOutErrorTopicName"];
 
-        public static string KafkaGroupName => Configuration["connectionStrings:KafkaGroupName"];
+        public static string KafkaGroupName => Configuration["appSettings:KafkaGroupName"];
     }
 }

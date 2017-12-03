@@ -46,7 +46,6 @@ namespace Request.Validator
 
         public static void ValidateRequestFromKafka()
         {
-
             // The Kafka endpoint address
             var kafkaEndpoint = AppSettings.KafkaConnection;//"127.0.0.1:9092";
             Console.WriteLine($"Kafka endpoint {kafkaEndpoint}");
